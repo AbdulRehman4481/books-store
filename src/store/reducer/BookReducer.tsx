@@ -48,7 +48,7 @@ const apiKey = process.env.REACT_APP_API_KEY;
 
 const bestApiUrl = `https://www.googleapis.com/books/v1/volumes?q=thriller&key=${apiKey}&maxResults=3`;
 
-const booksApiUrl = `https://www.googleapis.com/books/v1/volumes?q=adventure&key=${apiKey}&maxResults=6`;
+const booksApiUrl = `https://www.googleapis.com/books/v1/volumes?q=adventure&key=${apiKey}&maxResults=12`;
 
 export const fetchThrillerBooks = createAsyncThunk(
   "bookThrillerOption/fetchBooksThrillerOption",
@@ -88,14 +88,18 @@ export const BookReducer = createSlice({
       })
       .addCase(fetchThrillerBooks.fulfilled, (state, action) => {
         state.loading = false;
-        state.thrillerBooks = action.payload.items.map((item) => ({
-          id: item.id,
-          title: item.volumeInfo.title,
-          categories: item.volumeInfo.categories,
-          authors: item.volumeInfo.authors,
-          description: item.volumeInfo.description,
-          thumbnail: item.volumeInfo.imageLinks.thumbnail,
-        }));
+        if (state.AdventureBooks) {
+          state.thrillerBooks = action.payload?.items?.map((item) => ({
+            id: item.id,
+            title: item.volumeInfo.title,
+            categories: item.volumeInfo.categories,
+            authors: item.volumeInfo.authors,
+            description: item.volumeInfo.description,
+            thumbnail: item.volumeInfo.imageLinks?.thumbnail,
+          }));
+        } else {
+          state.thrillerBooks = [];
+        }
       })
       .addCase(fetchThrillerBooks.rejected, (state, action) => {
         state.loading = false;
@@ -108,14 +112,18 @@ export const BookReducer = createSlice({
       })
       .addCase(fetchAdventureBooks.fulfilled, (state, action) => {
         state.loading = false;
-        state.AdventureBooks = action.payload.items.map((item) => ({
-          id: item.id,
-          title: item.volumeInfo.title,
-          categories: item.volumeInfo.categories,
-          authors: item.volumeInfo.authors,
-          description: item.volumeInfo.description,
-          thumbnail: item.volumeInfo.imageLinks.thumbnail,
-        }));
+        if(state.AdventureBooks){
+          state.AdventureBooks = action.payload?.items?.map((item) => ({
+            id: item.id,
+            title: item.volumeInfo.title,
+            categories: item.volumeInfo.categories,
+            authors: item.volumeInfo.authors,
+            description: item.volumeInfo.description,
+            thumbnail: item.volumeInfo.imageLinks?.thumbnail,
+          }));
+        }else{
+          state.AdventureBooks=[]
+        }
       })
       .addCase(fetchAdventureBooks.rejected, (state, action) => {
         state.loading = false;

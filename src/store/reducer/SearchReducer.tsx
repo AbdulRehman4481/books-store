@@ -40,7 +40,7 @@ export const fetchSearchBooks = createAsyncThunk<ApiResponse, string>(
     if (search) {
       try {
         const response = await axios.get(
-          `https://www.googleapis.com/books/v1/volumes?q=${search}&key=AIzaSyCEUEhL5hbgRHbC3Gtp4bugkT--o_OCHVM&maxResults=10`
+          `https://www.googleapis.com/books/v1/volumes?q=${search}&key=AIzaSyCEUEhL5hbgRHbC3Gtp4bugkT--o_OCHVM&maxResults=40`
         );
         return response.data;
       } catch (error) {
@@ -60,14 +60,14 @@ export const SearchReducer = createSlice({
         state.error = null;
       })
       .addCase(fetchSearchBooks.fulfilled, (state, action) => {
-        state.searchBooks = action.payload.items.map((item) => ({
-          id: item.id||"",
-          title: item.volumeInfo.title||"",
-          categories: item.volumeInfo.categories||"",
-          description: item.volumeInfo.description||"",
-          thumbnail: item.volumeInfo.imageLinks.thumbnail||"",
-          authors: item.volumeInfo.authors||"",
-        }));
+          state.searchBooks = action.payload?.items?.map((item) => ({
+            id: item.id || "",
+            title: item.volumeInfo.title || "",
+            categories: item.volumeInfo.categories || "",
+            description: item.volumeInfo.description || "",
+            thumbnail: item.volumeInfo.imageLinks?.thumbnail || "",
+            authors: item.volumeInfo.authors || "",
+          }));
         state.loading = false;
       })
       .addCase(fetchSearchBooks.rejected, (state, action) => {
